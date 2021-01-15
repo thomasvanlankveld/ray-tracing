@@ -153,20 +153,20 @@ impl MulAssign<f64> for Vec3 {
     }
 }
 
-impl Div for Vec3 {
+impl Div<f64> for Vec3 {
     type Output = Self;
 
-    fn div(self, other: Self) -> Self::Output {
+    fn div(self, other: f64) -> Self::Output {
         Self {
-            x: self.x / other.x,
-            y: self.y / other.y,
-            z: self.z / other.z,
+            x: self.x / other,
+            y: self.y / other,
+            z: self.z / other,
         }
     }
 }
 
-impl DivAssign for Vec3 {
-    fn div_assign(&mut self, other: Self) {
+impl DivAssign<f64> for Vec3 {
+    fn div_assign(&mut self, other: f64) {
         *self = *self / other;
     }
 }
@@ -339,7 +339,7 @@ fn test_mul_assign_float() {
     // When I multiply assign it by 1.5
     vec3 *= 1.5;
 
-    // Then the first contains the product of the multiplication
+    // Then I get the product
     assert_eq!(vec3.x, 0.);
     assert_eq!(vec3.y, 1.5);
     assert_eq!(vec3.z, 3.);
@@ -347,32 +347,30 @@ fn test_mul_assign_float() {
 
 #[test]
 fn test_div() {
-    // Given two Vec3s
-    let vec3_first = Vec3::new(0., 1., 2.);
-    let vec3_second = Vec3::new(3., 4., 5.);
+    // Given a Vec3
+    let vec3 = Vec3::new(24., 35., 46.);
 
-    // When I divide the first by the second
-    let result = vec3_first / vec3_second;
+    // When I divide it by 2.
+    let result = vec3 / 2.;
 
-    // Then the first contains the result of the division
-    assert_eq!(result.x, 0.);
-    assert_eq!(result.y, 0.25);
-    assert_eq!(result.z, 0.4);
+    // Then I get the result of the division
+    assert_eq!(result.x, 12.);
+    assert_eq!(result.y, 17.5);
+    assert_eq!(result.z, 23.);
 }
 
 #[test]
 fn test_div_assign() {
-    // Given two Vec3s
-    let mut vec3_first = Vec3::new(0., 1., 2.);
-    let vec3_second = Vec3::new(3., 4., 5.);
+    // Given a Vec3
+    let mut vec3 = Vec3::new(24., 35., 46.);
 
-    // When I divide assign the first by the second
-    vec3_first /= vec3_second;
+    // When I divide assign it by 2.
+    vec3 /= 2.;
 
-    // Then the first contains the result of the division
-    assert_eq!(vec3_first.x, 0.);
-    assert_eq!(vec3_first.y, 0.25);
-    assert_eq!(vec3_first.z, 0.4);
+    // Then I get the result of the division
+    assert_eq!(vec3.x, 12.);
+    assert_eq!(vec3.y, 17.5);
+    assert_eq!(vec3.z, 23.);
 }
 
 #[test]

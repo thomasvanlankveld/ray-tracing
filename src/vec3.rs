@@ -91,11 +91,7 @@ impl Add for Vec3 {
 
 impl AddAssign for Vec3 {
     fn add_assign(&mut self, other: Self) {
-        *self = Self {
-            x: self.x + other.x,
-            y: self.y + other.y,
-            z: self.z + other.z,
-        }
+        *self = *self + other;
     }
 }
 
@@ -113,11 +109,7 @@ impl Mul for Vec3 {
 
 impl MulAssign for Vec3 {
     fn mul_assign(&mut self, other: Self) {
-        *self = Self {
-            x: self.x * other.x,
-            y: self.y * other.y,
-            z: self.z * other.z,
-        }
+        *self = *self * other;
     }
 }
 
@@ -135,11 +127,7 @@ impl Div for Vec3 {
 
 impl DivAssign for Vec3 {
     fn div_assign(&mut self, other: Self) {
-        *self = Self {
-            x: self.x / other.x,
-            y: self.y / other.y,
-            z: self.z / other.z,
-        }
+        *self = *self / other;
     }
 }
 

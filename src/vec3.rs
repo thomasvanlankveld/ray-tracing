@@ -107,6 +107,18 @@ impl Mul for Vec3 {
     }
 }
 
+impl Mul<f64> for Vec3 {
+    type Output = Self;
+
+    fn mul(self, other: f64) -> Self::Output {
+        Self {
+            x: self.x * other,
+            y: self.y * other,
+            z: self.z * other,
+        }
+    }
+}
+
 impl MulAssign for Vec3 {
     fn mul_assign(&mut self, other: Self) {
         *self = *self * other;
@@ -239,6 +251,20 @@ fn test_mul() {
     assert_eq!(product.x, 0.);
     assert_eq!(product.y, 4.);
     assert_eq!(product.z, 10.);
+}
+
+#[test]
+fn test_mul_float() {
+    // Given a Vec3
+    let vec3 = Vec3::new(24., 35., 46.);
+
+    // When I multiply it by 0.75
+    let product = vec3 * 0.75;
+
+    // Then the first contains the product of the multiplication
+    assert_eq!(product.x, 18.);
+    assert_eq!(product.y, 26.25);
+    assert_eq!(product.z, 34.5);
 }
 
 #[test]

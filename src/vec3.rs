@@ -13,6 +13,7 @@ pub trait Vec3Properties {
     fn new(x: f64, y: f64, z: f64) -> Self;
     fn len(self) -> f64;
     fn len_squared(self) -> f64;
+    fn dot(self, other: Self) -> f64;
 }
 
 impl Vec3Properties for Vec3 {
@@ -26,6 +27,10 @@ impl Vec3Properties for Vec3 {
 
     fn len_squared(self) -> f64 {
         self.x.powi(2) + self.y.powi(2) + self.z.powi(2)
+    }
+
+    fn dot(self, other: Self) -> f64 {
+        self.x * other.x + self.y * other.y + self.z * other.z
     }
 }
 
@@ -218,6 +223,19 @@ fn test_mutable_indexing() {
     assert_eq!(vec3.x, 0.);
     assert_eq!(vec3.y, 1.);
     assert_eq!(vec3.z, 2.);
+}
+
+#[test]
+fn dot() {
+    // Given two Vec3s
+    let vec3_first = Vec3::new(0., 1., 2.);
+    let vec3_second = Vec3::new(3., 4., 5.);
+
+    // When I compute their dot product
+    let product = vec3_first.dot(vec3_second);
+
+    // Then I get it
+    assert_eq!(product, 14.);
 }
 
 #[test]

@@ -145,9 +145,11 @@ impl Mul<Vec3> for f64 {
     }
 }
 
-impl MulAssign for Vec3 {
-    fn mul_assign(&mut self, other: Self) {
-        *self = *self * other;
+impl MulAssign<f64> for Vec3 {
+    fn mul_assign(&mut self, other: f64) {
+        self.x = self.x * other;
+        self.y = self.y * other;
+        self.z = self.z * other;
     }
 }
 
@@ -330,18 +332,17 @@ fn test_mul_float() {
 }
 
 #[test]
-fn test_mul_assign() {
-    // Given two Vec3s
-    let mut vec3_first = Vec3::new(0., 1., 2.);
-    let vec3_second = Vec3::new(3., 4., 5.);
+fn test_mul_assign_float() {
+    // Given a Vec3
+    let mut vec3 = Vec3::new(0., 1., 2.);
 
-    // When I multiply assign the first by the second
-    vec3_first *= vec3_second;
+    // When I multiply assign it by 1.5
+    vec3 *= 1.5;
 
     // Then the first contains the product of the multiplication
-    assert_eq!(vec3_first.x, 0.);
-    assert_eq!(vec3_first.y, 4.);
-    assert_eq!(vec3_first.z, 10.);
+    assert_eq!(vec3.x, 0.);
+    assert_eq!(vec3.y, 1.5);
+    assert_eq!(vec3.z, 3.);
 }
 
 #[test]

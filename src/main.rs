@@ -2,7 +2,10 @@
 use std::error::Error;
 
 // Project
+mod point3;
 mod vec3;
+use point3::Point3;
+use vec3::Vec3Properties;
 
 // 3rd party
 extern crate conv;
@@ -13,6 +16,8 @@ use conv::*;
 fn main() -> Result<(), Box<dyn Error>> {
     let image_width: u16 = 256;
     let image_height: u16 = 256;
+
+    let _point = Point3::new(3., 4., 5.);
 
     // Create pixel data
     let mut image = vec![vec![[0u8; 3]; image_width.into()]; image_height.into()];

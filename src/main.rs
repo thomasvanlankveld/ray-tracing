@@ -19,8 +19,10 @@ fn main() -> Result<(), Box<dyn Error>> {
     let image_width: u16 = 256;
     let image_height: u16 = 256;
 
-    let _color = Color::new(6., 2., 3.);
-    let _point = Point3::new(3., 4., 5.);
+    let color = Color::new(6., 2., 3.);
+    let point = Point3::new(3., 4., 5.);
+    let _sum = color + point;
+    // println!("{}", _sum);
 
     // Create pixel data
     let mut image = vec![vec![[0u8; 3]; image_width.into()]; image_height.into()];

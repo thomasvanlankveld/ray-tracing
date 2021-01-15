@@ -1,6 +1,6 @@
 use core::panic;
 use std::fmt::Display;
-use std::ops::{AddAssign, DivAssign, Index, IndexMut, MulAssign, Neg};
+use std::ops::{Add, AddAssign, DivAssign, Index, IndexMut, MulAssign, Neg};
 
 #[derive(Copy, Clone, Debug)]
 pub struct Vec3 {
@@ -73,6 +73,18 @@ impl IndexMut<u8> for Vec3 {
                 "Can't access value with index {} from {}. Allowed indices are 0, 1 and 2.",
                 index, self
             ),
+        }
+    }
+}
+
+impl Add for Vec3 {
+    type Output = Self;
+
+    fn add(self, other: Self) -> Self::Output {
+        Self {
+            x: self.x + other.x,
+            y: self.y + other.y,
+            z: self.z + other.z,
         }
     }
 }
@@ -170,6 +182,21 @@ fn test_mutable_indexing() {
     assert_eq!(vec3.x, 0.);
     assert_eq!(vec3.y, 1.);
     assert_eq!(vec3.z, 2.);
+}
+
+#[test]
+fn test_add() {
+    // Given two Vec3s
+    let vec3_first = Vec3::new(0., 1., 2.);
+    let vec3_second = Vec3::new(3., 4., 5.);
+
+    // When I add them together
+    let sum = vec3_first + vec3_second;
+
+    // Then the first contains the sum of the addition
+    assert_eq!(sum.x, 3.);
+    assert_eq!(sum.y, 5.);
+    assert_eq!(sum.z, 7.);
 }
 
 #[test]

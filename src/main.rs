@@ -2,8 +2,10 @@
 use std::error::Error;
 
 // Project
+mod color;
 mod point3;
 mod vec3;
+use color::Color;
 use point3::Point3;
 use vec3::Vec3Properties;
 
@@ -17,6 +19,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let image_width: u16 = 256;
     let image_height: u16 = 256;
 
+    let _color = Color::new(6., 2., 3.);
     let _point = Point3::new(3., 4., 5.);
 
     // Create pixel data

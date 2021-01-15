@@ -1,6 +1,9 @@
 // Sys
 use std::error::Error;
 
+// Project
+mod vec3;
+
 // 3rd party
 extern crate conv;
 use conv::*;
@@ -33,7 +36,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-/// View at http://cs.rhodes.edu/welshc/COMP141_F16/ppmReader.html
+// View at http://cs.rhodes.edu/welshc/COMP141_F16/ppmReader.html
 fn write_ppm(
     image_width: u16,
     image_height: u16,

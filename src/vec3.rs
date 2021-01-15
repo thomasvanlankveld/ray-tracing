@@ -11,11 +11,21 @@ pub struct Vec3 {
 
 pub trait Vec3Properties {
     fn new(x: f64, y: f64, z: f64) -> Self;
+    fn len(self) -> f64;
+    fn len_squared(self) -> f64;
 }
 
 impl Vec3Properties for Vec3 {
     fn new(x: f64, y: f64, z: f64) -> Self {
         return Self { x, y, z };
+    }
+
+    fn len(self) -> f64 {
+        f64::sqrt(self.len_squared())
+    }
+
+    fn len_squared(self) -> f64 {
+        self.x.powi(2) + self.y.powi(2) + self.z.powi(2)
     }
 }
 
@@ -249,4 +259,36 @@ fn test_div_assign() {
     assert_eq!(vec3_first.x, 0f64);
     assert_eq!(vec3_first.y, 0.25f64);
     assert_eq!(vec3_first.z, 0.4f64);
+}
+
+#[test]
+fn test_len() {
+    // Given a Vec3
+    let vec3 = Vec3 {
+        x: 24.0,
+        y: 35.0,
+        z: 46.0,
+    };
+
+    // When I get the length
+    let len = vec3.len();
+
+    // Then it is equal to the distance from { 0, 0, 0 } to its values
+    assert_eq!(62.5859409132754, len);
+}
+
+#[test]
+fn test_len_squared() {
+    // Given a Vec3
+    let vec3 = Vec3 {
+        x: 24.0,
+        y: 35.0,
+        z: 46.0,
+    };
+
+    // When I get the length squared
+    let len_squared = vec3.len_squared();
+
+    // Then it is equal to the sum of all of its values sqaured
+    assert_eq!(3917.0, len_squared);
 }

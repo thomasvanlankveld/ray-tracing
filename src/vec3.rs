@@ -14,6 +14,7 @@ pub trait Vec3Properties {
     fn len(self) -> f64;
     fn len_squared(self) -> f64;
     fn dot(self, other: Self) -> f64;
+    fn cross(self, other: Self) -> Self;
 }
 
 impl Vec3Properties for Vec3 {
@@ -31,6 +32,14 @@ impl Vec3Properties for Vec3 {
 
     fn dot(self, other: Self) -> f64 {
         self.x * other.x + self.y * other.y + self.z * other.z
+    }
+
+    fn cross(self, other: Self) -> Self {
+        Self {
+            x: self.y * other.z - self.z * other.y,
+            y: self.z * other.x - self.x * other.z,
+            z: self.x * other.y - self.y * other.x,
+        }
     }
 }
 
@@ -226,7 +235,7 @@ fn test_mutable_indexing() {
 }
 
 #[test]
-fn dot() {
+fn test_dot() {
     // Given two Vec3s
     let vec3_first = Vec3::new(0., 1., 2.);
     let vec3_second = Vec3::new(3., 4., 5.);
@@ -236,6 +245,21 @@ fn dot() {
 
     // Then I get it
     assert_eq!(product, 14.);
+}
+
+#[test]
+fn test_cross() {
+    // Given two Vec3s
+    let vec3_first = Vec3::new(2., 3., 4.);
+    let vec3_second = Vec3::new(5., 6., 7.);
+
+    // When I compute their cross product
+    let product = vec3_first.cross(vec3_second);
+
+    // Then I get it
+    assert_eq!(product.x, -3.);
+    assert_eq!(product.y, 6.);
+    assert_eq!(product.z, -3.);
 }
 
 #[test]

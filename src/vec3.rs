@@ -1,6 +1,6 @@
 use core::panic;
 use std::fmt::Display;
-use std::ops::{Add, AddAssign, DivAssign, Index, IndexMut, MulAssign, Neg};
+use std::ops::{Add, AddAssign, DivAssign, Index, IndexMut, Mul, MulAssign, Neg};
 
 #[derive(Copy, Clone, Debug)]
 pub struct Vec3 {
@@ -95,6 +95,18 @@ impl AddAssign for Vec3 {
             x: self.x + other.x,
             y: self.y + other.y,
             z: self.z + other.z,
+        }
+    }
+}
+
+impl Mul for Vec3 {
+    type Output = Self;
+
+    fn mul(self, other: Self) -> Self::Output {
+        Self {
+            x: self.x * other.x,
+            y: self.y * other.y,
+            z: self.z * other.z,
         }
     }
 }
@@ -212,6 +224,21 @@ fn test_add_assign() {
     assert_eq!(vec3_first.x, 3.);
     assert_eq!(vec3_first.y, 5.);
     assert_eq!(vec3_first.z, 7.);
+}
+
+#[test]
+fn test_mul() {
+    // Given two Vec3s
+    let vec3_first = Vec3::new(0., 1., 2.);
+    let vec3_second = Vec3::new(3., 4., 5.);
+
+    // When I multiply them
+    let product = vec3_first * vec3_second;
+
+    // Then the first contains the product of the multiplication
+    assert_eq!(product.x, 0.);
+    assert_eq!(product.y, 4.);
+    assert_eq!(product.z, 10.);
 }
 
 #[test]

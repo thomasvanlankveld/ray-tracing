@@ -15,6 +15,7 @@ pub trait Vec3Properties {
     fn len_squared(self) -> f64;
     fn dot(self, other: Self) -> f64;
     fn cross(self, other: Self) -> Self;
+    fn unit_vector(self) -> Self;
 }
 
 impl Vec3Properties for Vec3 {
@@ -40,6 +41,10 @@ impl Vec3Properties for Vec3 {
             y: self.z * other.x - self.x * other.z,
             z: self.x * other.y - self.y * other.x,
         }
+    }
+
+    fn unit_vector(self) -> Self {
+        self / self.len()
     }
 }
 
@@ -395,4 +400,19 @@ fn test_len_squared() {
 
     // Then it is equal to the sum of all of its values sqaured
     assert_eq!(3917., len_squared);
+}
+
+#[test]
+fn test_unit_vector() {
+    // Given a Vec3
+    let vec3 = Vec3::new(24., 35., 46.);
+
+    // When I get its unit vector
+    let unit_vec = vec3.unit_vector();
+
+    // Then it is a vector of length 1 in the same direction as the original vector
+    assert_eq!(unit_vec.len(), 1.);
+    assert_eq!(unit_vec.x, 0.3834727040895098);
+    assert_eq!(unit_vec.y, 0.5592310267972017);
+    assert_eq!(unit_vec.z, 0.7349893495048937);
 }

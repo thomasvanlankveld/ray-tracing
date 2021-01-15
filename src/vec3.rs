@@ -1,6 +1,6 @@
 use core::panic;
 use std::fmt::Display;
-use std::ops::{AddAssign, Index, IndexMut, MulAssign, Neg};
+use std::ops::{AddAssign, DivAssign, Index, IndexMut, MulAssign, Neg};
 
 #[derive(Copy, Clone, Debug)]
 pub struct Vec3 {
@@ -83,6 +83,16 @@ impl MulAssign for Vec3 {
             x: self.x * other.x,
             y: self.y * other.y,
             z: self.z * other.z,
+        }
+    }
+}
+
+impl DivAssign for Vec3 {
+    fn div_assign(&mut self, other: Self) {
+        *self = Self {
+            x: self.x / other.x,
+            y: self.y / other.y,
+            z: self.z / other.z,
         }
     }
 }
@@ -216,4 +226,27 @@ fn test_mul_assign() {
     assert_eq!(vec3_first.x, 0f64);
     assert_eq!(vec3_first.y, 4f64);
     assert_eq!(vec3_first.z, 10f64);
+}
+
+#[test]
+fn test_div_assign() {
+    // Given two Vec3s
+    let mut vec3_first = Vec3 {
+        x: 0f64,
+        y: 1f64,
+        z: 2f64,
+    };
+    let vec3_second = Vec3 {
+        x: 3f64,
+        y: 4f64,
+        z: 5f64,
+    };
+
+    // When I divide assign the first by the second
+    vec3_first /= vec3_second;
+
+    // Then the first contains the result of the division
+    assert_eq!(vec3_first.x, 0f64);
+    assert_eq!(vec3_first.y, 0.25f64);
+    assert_eq!(vec3_first.z, 0.4f64);
 }

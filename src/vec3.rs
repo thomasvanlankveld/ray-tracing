@@ -1,41 +1,33 @@
 use core::panic;
+use std::cmp::PartialEq;
 use std::fmt::Display;
 use std::ops::{Add, AddAssign, Div, DivAssign, Index, IndexMut, Mul, MulAssign, Neg};
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Vec3 {
     pub x: f64,
     pub y: f64,
     pub z: f64,
 }
 
-pub trait Vec3Properties {
-    fn new(x: f64, y: f64, z: f64) -> Self;
-    fn len(self) -> f64;
-    fn len_squared(self) -> f64;
-    fn dot(self, other: Self) -> f64;
-    fn cross(self, other: Self) -> Self;
-    fn unit_vector(self) -> Self;
-}
-
-impl Vec3Properties for Vec3 {
-    fn new(x: f64, y: f64, z: f64) -> Self {
+impl Vec3 {
+    pub fn new(x: f64, y: f64, z: f64) -> Self {
         return Self { x, y, z };
     }
 
-    fn len(self) -> f64 {
+    pub fn len(self) -> f64 {
         f64::sqrt(self.len_squared())
     }
 
-    fn len_squared(self) -> f64 {
+    pub fn len_squared(self) -> f64 {
         self.x.powi(2) + self.y.powi(2) + self.z.powi(2)
     }
 
-    fn dot(self, other: Self) -> f64 {
+    pub fn dot(self, other: Self) -> f64 {
         self.x * other.x + self.y * other.y + self.z * other.z
     }
 
-    fn cross(self, other: Self) -> Self {
+    pub fn cross(self, other: Self) -> Self {
         Self {
             x: self.y * other.z - self.z * other.y,
             y: self.z * other.x - self.x * other.z,
@@ -43,7 +35,7 @@ impl Vec3Properties for Vec3 {
         }
     }
 
-    fn unit_vector(self) -> Self {
+    pub fn unit_vector(self) -> Self {
         self / self.len()
     }
 }

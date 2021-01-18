@@ -5,10 +5,10 @@ use std::error::Error;
 mod color;
 mod point3;
 mod ppm;
+mod ray;
 mod vec3;
 use color::Color;
 use ppm::write_ppm;
-use vec3::Vec3Properties;
 
 // 3rd party
 extern crate conv;

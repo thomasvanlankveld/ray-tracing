@@ -1,7 +1,6 @@
 use std::error::Error;
 
 use crate::Color;
-use crate::Vec3Properties;
 
 // View at http://cs.rhodes.edu/welshc/COMP141_F16/ppmReader.html
 pub fn write_ppm(

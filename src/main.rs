@@ -20,6 +20,8 @@ use conv::*;
 #[allow(dead_code)]
 fn ray_rainbow_color(ray: Ray) -> Color {
     let unit_direction = Vec3::unit_vector(ray.direction);
+
+    // Generate color by scaling x and y of the unit direction from domain -1, 1 to range 0, 1.
     Color::new(
         unit_direction.y / 2. + 0.5,
         0.5 - unit_direction.x / 2.,
@@ -29,7 +31,11 @@ fn ray_rainbow_color(ray: Ray) -> Color {
 
 fn ray_color(ray: Ray) -> Color {
     let unit_direction = Vec3::unit_vector(ray.direction);
+
+    // Scale the y factor of the unit direction from domain -1, 1 to range 0, 1
     let t = 0.5 * (unit_direction.y + 1.);
+
+    // Scale from domain t: 0, 1 to color: white, blue
     (1. - t) * Color::new(1., 1., 1.) + t * Color::new(0.5, 0.7, 1.)
 }
 

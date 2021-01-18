@@ -1,7 +1,7 @@
 use core::panic;
 use std::cmp::PartialEq;
 use std::fmt::Display;
-use std::ops::{Add, AddAssign, Div, DivAssign, Index, IndexMut, Mul, MulAssign, Neg};
+use std::ops::{Add, AddAssign, Div, DivAssign, Index, IndexMut, Mul, MulAssign, Neg, Sub};
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Vec3 {
@@ -103,6 +103,18 @@ impl Add for Vec3 {
 impl AddAssign for Vec3 {
     fn add_assign(&mut self, other: Self) {
         *self = *self + other;
+    }
+}
+
+impl Sub for Vec3 {
+    type Output = Self;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        Self {
+            x: self.x - rhs.x,
+            y: self.y - rhs.y,
+            z: self.z - rhs.z,
+        }
     }
 }
 
@@ -270,7 +282,7 @@ fn test_add() {
     // When I add them together
     let sum = vec3_first + vec3_second;
 
-    // Then the first contains the sum of the addition
+    // Then I get the sum
     assert_eq!(sum.x, 3.);
     assert_eq!(sum.y, 5.);
     assert_eq!(sum.z, 7.);
@@ -289,6 +301,21 @@ fn test_add_assign() {
     assert_eq!(vec3_first.x, 3.);
     assert_eq!(vec3_first.y, 5.);
     assert_eq!(vec3_first.z, 7.);
+}
+
+#[test]
+fn test_sub() {
+    // Given two Vec3s
+    let vec3_first = Vec3::new(0., 1., 2.);
+    let vec3_second = Vec3::new(3., 4., 5.);
+
+    // When I subtract the first from the second
+    let result = vec3_second - vec3_first;
+
+    // Then the I get the result of the subtraction
+    assert_eq!(result.x, 3.);
+    assert_eq!(result.y, 3.);
+    assert_eq!(result.z, 3.);
 }
 
 #[test]

@@ -24,7 +24,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         for (y, pixel) in row.iter_mut().enumerate() {
             // RGB values as floats between 0 and 1
             let r = f64::value_from(y)? / f64::from(image_width - 1);
-            let g = f64::value_from(255 - x)? / f64::from(image_height - 1);
+            let g = f64::value_from((image_height - 1) as usize - x)? / f64::from(image_height - 1);
             let b = 0.25;
 
             *pixel = Color::new(r, g, b);

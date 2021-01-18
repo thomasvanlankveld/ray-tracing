@@ -1,6 +1,7 @@
 use std::error::Error;
 
 use crate::Color;
+use crate::Vec3Properties;
 
 // View at http://cs.rhodes.edu/welshc/COMP141_F16/ppmReader.html
 pub fn write_ppm(
@@ -40,4 +41,15 @@ fn write_pixel(pixel: Color, writer: &mut impl std::io::Write) -> Result<(), Box
 
     // Exit
     Ok(())
+}
+
+#[test]
+fn test_write_ppm() {
+    let mut result = Vec::new();
+
+    let image = vec![vec![Color::new(0., 0.3, 0.7), Color::new(0.6, 0.2, 0.8)]];
+
+    write_ppm(2, 1, image, &mut result).unwrap();
+
+    assert_eq!(result, b"P3\n2 1\n255\n0 76 179\n153 51 204\n");
 }

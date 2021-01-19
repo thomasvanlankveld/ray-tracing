@@ -41,6 +41,8 @@ fn ray_background_color(ray: Ray) -> Color {
 
 // Whether a ray passes through a sphere
 //
+// If it does not hit, it returns -1. If it does, it returns distance t that must be travelled along the given ray to reach the sphere.
+//
 // A sphere at origin 0, 0, 0 is the collection of points where x^2+y^2+z^2=R^2
 //
 // Expressed in vector form where P is a point and C is the center of the sphere: (P−C)⋅(P−C)=r^2
@@ -60,9 +62,9 @@ fn hit_sphere(center: Point3, radius: f64, ray: Ray) -> f64 {
     let b = 2. * oc.dot(ray.direction);
     // Compute (A−C)⋅(A−C)−r^2
     let c = oc.dot(oc) - radius * radius;
-    // Compute t
+    // Compute discriminant
     let discriminant = b * b - 4. * a * c;
-    // Check whether t > 0
+    // Check whether discriminant < 0
     match discriminant < 0. {
         true => -1.,
         false => (-b - f64::sqrt(discriminant)) / (2. * a),
@@ -70,11 +72,12 @@ fn hit_sphere(center: Point3, radius: f64, ray: Ray) -> f64 {
 }
 
 fn ray_color(ray: Ray) -> Color {
-    // Return red if the ray hits the sphere, and the background color if it does not
-    let t = hit_sphere(Point3::new(0., 0., -1.), 0.5, ray);
+    // Return a surface normal visualization if the ray hits the sphere, and the background color if it does not
+    let circle_center = Point3::new(0., 0., -1.);
+    let t = hit_sphere(circle_center, 0.5, ray);
     if t > 0. {
-        let N = (ray.at(t) - Vec3::new(0., 0., -1.)).unit_vector();
-        return 0.5 * Color::new(N.x + 1., N.y + 1., N.z + 1.);
+        let surface_normal = (ray.at(t) - circle_center).unit_vector();
+        return 0.5 * (surface_normal + Color::new(1., 1., 1.));
     }
     ray_background_color(ray)
 }

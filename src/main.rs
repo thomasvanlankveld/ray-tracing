@@ -57,17 +57,17 @@ fn hit_sphere(center: Point3, radius: f64, ray: Ray) -> f64 {
     // Compute (A-C)
     let oc = ray.origin - center;
     // Compute b⋅b
-    let a = ray.direction.dot(ray.direction);
-    // Compute 2b⋅(A−C)
-    let b = 2. * oc.dot(ray.direction);
+    let a = ray.direction.len_squared();
+    // Compute b⋅(A−C)
+    let half_b = oc.dot(ray.direction);
     // Compute (A−C)⋅(A−C)−r^2
-    let c = oc.dot(oc) - radius * radius;
+    let c = oc.len_squared() - radius * radius;
     // Compute discriminant
-    let discriminant = b * b - 4. * a * c;
+    let discriminant = half_b * half_b - a * c;
     // Check whether discriminant < 0
     match discriminant < 0. {
         true => -1.,
-        false => (-b - f64::sqrt(discriminant)) / (2. * a),
+        false => (-half_b - f64::sqrt(discriminant)) / a,
     }
 }
 

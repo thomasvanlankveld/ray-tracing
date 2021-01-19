@@ -51,7 +51,7 @@ fn ray_background_color(ray: Ray) -> Color {
 // Expanding this equation and moving everything to the left yields: (t^2)b⋅b+2tb⋅(A−C)+(A−C)⋅(A−C)−r^2=0
 //
 // The function below checks whether t > 0 in (t^2)b⋅b+2tb⋅(A−C)+(A−C)⋅(A−C)−r^2=0
-fn hit_sphere(center: Point3, radius: f64, ray: Ray) -> bool {
+fn hit_sphere(center: Point3, radius: f64, ray: Ray) -> f64 {
     // Compute (A-C)
     let oc = ray.origin - center;
     // Compute b⋅b
@@ -63,15 +63,20 @@ fn hit_sphere(center: Point3, radius: f64, ray: Ray) -> bool {
     // Compute t
     let discriminant = b * b - 4. * a * c;
     // Check whether t > 0
-    discriminant > 0.
+    match discriminant < 0. {
+        true => -1.,
+        false => (-b - f64::sqrt(discriminant)) / (2. * a),
+    }
 }
 
 fn ray_color(ray: Ray) -> Color {
     // Return red if the ray hits the sphere, and the background color if it does not
-    match hit_sphere(Point3::new(0., 0., -1.), 0.5, ray) {
-        true => Color::new(1., 0., 0.),
-        false => ray_background_color(ray),
+    let t = hit_sphere(Point3::new(0., 0., -1.), 0.5, ray);
+    if t > 0. {
+        let N = (ray.at(t) - Vec3::new(0., 0., -1.)).unit_vector();
+        return 0.5 * Color::new(N.x + 1., N.y + 1., N.z + 1.);
     }
+    ray_background_color(ray)
 }
 
 fn main() -> Result<(), Box<dyn Error>> {

@@ -3,9 +3,11 @@ use std::error::Error;
 
 // Project
 mod color;
+mod hittable;
 mod point3;
 mod ppm;
 mod ray;
+mod sphere;
 mod vec3;
 use color::Color;
 use point3::Point3;

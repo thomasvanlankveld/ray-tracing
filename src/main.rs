@@ -18,7 +18,7 @@ extern crate conv;
 use conv::*;
 
 #[allow(dead_code)]
-fn ray_rainbow_color(ray: Ray) -> Color {
+fn ray_background_rainbow_color(ray: Ray) -> Color {
     let unit_direction = Vec3::unit_vector(ray.direction);
 
     // Generate color by scaling x and y of the unit direction from domain -1, 1 to range 0, 1.
@@ -29,7 +29,7 @@ fn ray_rainbow_color(ray: Ray) -> Color {
     )
 }
 
-fn ray_color(ray: Ray) -> Color {
+fn ray_background_color(ray: Ray) -> Color {
     let unit_direction = Vec3::unit_vector(ray.direction);
 
     // Scale the y factor of the unit direction from domain -1, 1 to range 0, 1
@@ -37,6 +37,41 @@ fn ray_color(ray: Ray) -> Color {
 
     // Scale from domain t: 0, 1 to color: white, blue
     (1. - t) * Color::new(1., 1., 1.) + t * Color::new(0.5, 0.7, 1.)
+}
+
+// Whether a ray passes through a sphere
+//
+// A sphere at origin 0, 0, 0 is the collection of points where x^2+y^2+z^2=R^2
+//
+// Expressed in vector form where P is a point and C is the center of the sphere: (P−C)⋅(P−C)=r^2
+//
+// Using a ray P(t)=A+tb instead of a point, where A is its origin, b its direction and t the
+// distance along that direction, the expression becomes (P(t)−C)⋅(P(t)−C)=r^2
+//
+// Expanding this equation and moving everything to the left yields: (t^2)b⋅b+2tb⋅(A−C)+(A−C)⋅(A−C)−r^2=0
+//
+// The function below checks whether t > 0 in (t^2)b⋅b+2tb⋅(A−C)+(A−C)⋅(A−C)−r^2=0
+fn hit_sphere(center: Point3, radius: f64, ray: Ray) -> bool {
+    // Compute (A-C)
+    let oc = ray.origin - center;
+    // Compute b⋅b
+    let a = ray.direction.dot(ray.direction);
+    // Compute 2b⋅(A−C)
+    let b = 2. * oc.dot(ray.direction);
+    // Compute (A−C)⋅(A−C)−r^2
+    let c = oc.dot(oc) - radius * radius;
+    // Compute t
+    let discriminant = b * b - 4. * a * c;
+    // Check whether t > 0
+    discriminant > 0.
+}
+
+fn ray_color(ray: Ray) -> Color {
+    // Return red if the ray hits the sphere, and the background color if it does not
+    match hit_sphere(Point3::new(0., 0., -1.), 0.5, ray) {
+        true => Color::new(1., 0., 0.),
+        false => ray_background_color(ray),
+    }
 }
 
 fn main() -> Result<(), Box<dyn Error>> {

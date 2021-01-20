@@ -116,8 +116,11 @@ fn main() -> Result<(), Box<dyn Error>> {
                 *pixel += ray_color(ray, &world, max_depth);
             }
 
-            // Get average value of all samples by dividing by number of samples
-            *pixel /= f64::from(samples_per_pixel);
+            // Get average value of all samples and apply gamma correction
+            let scale = 1. / f64::from(samples_per_pixel);
+            pixel.x = f64::sqrt(scale * pixel.x);
+            pixel.y = f64::sqrt(scale * pixel.y);
+            pixel.z = f64::sqrt(scale * pixel.z);
         }
     }
 

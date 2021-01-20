@@ -2,15 +2,15 @@
 use crate::hittable::{self, HitRecord, Hittable};
 use crate::ray::Ray;
 
-struct HittableList {
+pub struct HittableList {
     objects: Vec<Box<dyn Hittable>>,
 }
 
 impl HittableList {
     #[allow(dead_code)]
-    pub fn new(object: Box<dyn Hittable>) -> Self {
+    pub fn new() -> Self {
         HittableList {
-            objects: vec![object],
+            objects: Vec::new(),
         }
     }
 

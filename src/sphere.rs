@@ -16,6 +16,20 @@ impl Sphere {
 }
 
 impl Hittable for Sphere {
+    // Whether a ray passes through this sphere
+    //
+    // If it does not hit, it returns -1. If it does, it returns distance t that must be travelled along the given ray to reach the sphere.
+    //
+    // A sphere at origin 0, 0, 0 is the collection of points where x^2+y^2+z^2=R^2
+    //
+    // Expressed in vector form where P is a point and C is the center of the sphere: (P−C)⋅(P−C)=r^2
+    //
+    // Using a ray P(t)=A+tb instead of a point, where A is its origin, b its direction and t the
+    // distance along that direction, the expression becomes (P(t)−C)⋅(P(t)−C)=r^2
+    //
+    // Expanding this equation and moving everything to the left yields: (t^2)b⋅b+2tb⋅(A−C)+(A−C)⋅(A−C)−r^2=0
+    //
+    // The function below checks whether t > 0 in (t^2)b⋅b+2tb⋅(A−C)+(A−C)⋅(A−C)−r^2=0
     fn hit(&self, ray: Ray, t_min: f64, t_max: f64, record: &mut HitRecord) -> bool {
         let oc = ray.origin - self.center;
         let a = ray.direction.len_squared();

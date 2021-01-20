@@ -8,3 +8,4 @@ edition = "2018"
 
 [dependencies]
 conv = "0.3.3"
+rand = "0.8.2"

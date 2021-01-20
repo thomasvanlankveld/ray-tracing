@@ -1,9 +1,13 @@
+// Sys
 use core::panic;
 use std::cmp::PartialEq;
 use std::fmt::Display;
 use std::ops::{
     Add, AddAssign, Div, DivAssign, Index, IndexMut, Mul, MulAssign, Neg, Sub, SubAssign,
 };
+
+// 3rd party
+use rand::{random, thread_rng, Rng};
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Vec3 {
@@ -14,7 +18,20 @@ pub struct Vec3 {
 
 impl Vec3 {
     pub fn new(x: f64, y: f64, z: f64) -> Self {
-        return Self { x, y, z };
+        Self { x, y, z }
+    }
+
+    pub fn random() -> Self {
+        Self::new(random::<f64>(), random::<f64>(), random::<f64>())
+    }
+
+    pub fn random_in_range(min: f64, max: f64) -> Self {
+        let mut rng = thread_rng();
+        Self::new(
+            rng.gen_range(min..max),
+            rng.gen_range(min..max),
+            rng.gen_range(min..max),
+        )
     }
 
     pub fn len(self) -> f64 {

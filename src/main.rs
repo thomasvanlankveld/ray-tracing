@@ -1,5 +1,6 @@
 // Sys
 use std::error::Error;
+use std::io::Write;
 
 // Project
 mod camera;
@@ -49,13 +50,32 @@ fn ray_background_color(ray: Ray) -> Color {
     (1. - t) * Color::new(1., 1., 1.) + t * Color::new(0.5, 0.7, 1.)
 }
 
+fn random_in_unit_sphere() -> Point3 {
+    loop {
+        let point = Vec3::random_in_range(-1., 1.);
+        if point.len_squared() < 1. {
+            return point;
+        };
+    }
+}
+
 // Return a surface normal visualization if the ray hits the sphere, and the background color if it does not
-fn ray_color(ray: Ray, world: &dyn Hittable) -> Color {
+fn ray_color(ray: Ray, world: &dyn Hittable, depth: i64) -> Color {
     let mut record = HitRecord::new();
 
+    if depth <= 0 {
+        return Color::new(0., 0., 0.);
+    };
+
     if world.hit(ray, 0., f64::INFINITY, &mut record) {
-        return 0.5 * (record.normal + Color::new(1., 1., 1.));
-    }
+        let target = record.point + record.normal + random_in_unit_sphere();
+        return 0.5
+            * ray_color(
+                Ray::new(record.point, target - record.point),
+                world,
+                depth - 1,
+            );
+    };
 
     ray_background_color(ray)
 }
@@ -66,6 +86,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let image_width: u16 = 400;
     let image_height: u16 = (f64::from(image_width) / aspect_ratio).floor() as u16;
     let samples_per_pixel = 100;
+    let max_depth = 50;
 
     // World
     let mut world = HittableList::new();
@@ -80,6 +101,11 @@ fn main() -> Result<(), Box<dyn Error>> {
     // Create pixel data
     let mut image = vec![vec![Color::new(0., 0., 0.); image_width.into()]; image_height.into()];
     for (y, row) in image.iter_mut().rev().enumerate() {
+        writeln!(
+            std::io::stderr(),
+            "Scanlines remaining: {}",
+            image_height - y as u16,
+        )?;
         for (x, pixel) in row.iter_mut().enumerate() {
             // Per pixel, compute a number of randomly sampled values and add them all to the pixel
             for _ in 0..(samples_per_pixel - 1) {
@@ -87,8 +113,9 @@ fn main() -> Result<(), Box<dyn Error>> {
                 let v =
                     (f64::value_from(y)? + random::<f64>()) / f64::value_from(image_height - 1)?;
                 let ray = camera.get_ray(u, v);
-                *pixel += ray_color(ray, &world);
+                *pixel += ray_color(ray, &world, max_depth);
             }
+
             // Get average value of all samples by dividing by number of samples
             *pixel /= f64::from(samples_per_pixel);
         }

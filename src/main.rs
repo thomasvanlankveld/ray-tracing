@@ -4,6 +4,7 @@ use std::error::Error;
 // Project
 mod color;
 mod hittable;
+mod hittable_list;
 mod point3;
 mod ppm;
 mod ray;

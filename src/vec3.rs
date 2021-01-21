@@ -79,6 +79,14 @@ impl Vec3 {
     pub fn reflect(self, normal: Vec3) -> Self {
         self - 2. * self.dot(normal) * normal
     }
+
+    pub fn refract(self, normal: Vec3, eta_in_over_eta_out: f64) -> Self {
+        let cos_theta = f64::min((-self).dot(normal), 1.);
+        let ray_out_perpendicular: Vec3 = eta_in_over_eta_out * (self + cos_theta * normal);
+        let ray_out_parallel =
+            -f64::sqrt(f64::abs(1. - ray_out_perpendicular.len_squared())) * normal;
+        ray_out_perpendicular + ray_out_parallel
+    }
 }
 
 impl Display for Vec3 {

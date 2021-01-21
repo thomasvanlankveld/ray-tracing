@@ -1,4 +1,4 @@
-use crate::{color::Color, material::Material, point3::Vec3, ray::Ray};
+use crate::{color::Color, hittable::HitRecord, material::Material, point3::Vec3, ray::Ray};
 
 pub struct Metal {
     albedo: Color,
@@ -17,10 +17,10 @@ impl Metal {
 impl Material for Metal {
     fn scatter(
         &self,
-        ray_in: crate::ray::Ray,
-        record: &crate::hittable::HitRecord,
+        ray_in: Ray,
+        record: &HitRecord,
         attenuation: &mut Color,
-        scattered: &mut crate::ray::Ray,
+        scattered: &mut Ray,
     ) -> bool {
         let reflected = ray_in.direction.unit_vector().reflect(record.normal);
         *scattered = Ray::new(

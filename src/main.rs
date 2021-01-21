@@ -59,6 +59,10 @@ fn random_in_unit_sphere() -> Point3 {
     }
 }
 
+fn random_unit_vector() -> Point3 {
+    random_in_unit_sphere().unit_vector()
+}
+
 // Return a surface normal visualization if the ray hits the sphere, and the background color if it does not
 fn ray_color(ray: Ray, world: &dyn Hittable, depth: i64) -> Color {
     let mut record = HitRecord::new();
@@ -67,8 +71,9 @@ fn ray_color(ray: Ray, world: &dyn Hittable, depth: i64) -> Color {
         return Color::new(0., 0., 0.);
     };
 
-    if world.hit(ray, 0., f64::INFINITY, &mut record) {
-        let target = record.point + record.normal + random_in_unit_sphere();
+    // We set t_min to slightly above 0, so we don't get values below 0 from floating point rounding errors (this fixes shadow acne)
+    if world.hit(ray, 0.001, f64::INFINITY, &mut record) {
+        let target = record.point + record.normal + random_unit_vector();
         return 0.5
             * ray_color(
                 Ray::new(record.point, target - record.point),

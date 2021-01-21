@@ -2,6 +2,7 @@ use rand::random;
 
 use crate::{color::Color, hittable::HitRecord, material::Material, point3::Vec3, ray::Ray};
 
+#[derive(Debug, Clone, Copy)]
 pub struct Dielectric {
     refraction_index: f64,
 }

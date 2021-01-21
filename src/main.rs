@@ -101,8 +101,13 @@ fn main() -> Result<(), Box<dyn Error>> {
     let refracting_material = Dielectric::new(1.5);
 
     let ground = Sphere::new(Point3::new(0., -100.5, -1.), 100., Rc::new(ground_material));
-    let left = Sphere::new(Point3::new(0., 0., -1.), 0.5, Rc::new(blue_ball_material));
-    let center = Sphere::new(Point3::new(-1., 0., -1.), 0.5, Rc::new(refracting_material));
+    let left = Sphere::new(Point3::new(-1., 0., -1.), 0.5, Rc::new(refracting_material));
+    let left_internal = Sphere::new(
+        Point3::new(-1., 0., -1.),
+        -0.4,
+        Rc::new(refracting_material),
+    );
+    let center = Sphere::new(Point3::new(0., 0., -1.), 0.5, Rc::new(blue_ball_material));
     let right = Sphere::new(
         Point3::new(1., 0., -1.),
         0.5,
@@ -110,6 +115,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     );
 
     world.add(Box::new(left));
+    world.add(Box::new(left_internal));
     world.add(Box::new(center));
     world.add(Box::new(right));
     // world.add(Box::new(Sphere::new(
@@ -125,7 +131,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     world.add(Box::new(ground));
 
     // Camera
-    let camera = Camera::new();
+    let camera = Camera::new(90., 16. / 9.);
 
     // Create pixel data
     let mut image = vec![vec![Color::new(0., 0., 0.); image_width.into()]; image_height.into()];

@@ -94,19 +94,15 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut world = HittableList::new();
 
     let ground_material = Lambertian::new(Color::new(0.8, 0.8, 0.));
+    let blue_ball_material = Lambertian::new(Color::new(0.1, 0.2, 0.5));
     // let ball_material = Lambertian::new(Color::new(0.7, 0.3, 0.3));
     // let metal_material = Metal::new(Color::new(0.8, 0.8, 0.8), 0.3);
     let yellow_metal_material = Metal::new(Color::new(0.8, 0.6, 0.2), 1.);
     let refracting_material = Dielectric::new(1.5);
-    let refracting_material_2 = Dielectric::new(1.5);
 
     let ground = Sphere::new(Point3::new(0., -100.5, -1.), 100., Rc::new(ground_material));
-    let left = Sphere::new(Point3::new(0., 0., -1.), 0.5, Rc::new(refracting_material));
-    let center = Sphere::new(
-        Point3::new(-1., 0., -1.),
-        0.5,
-        Rc::new(refracting_material_2),
-    );
+    let left = Sphere::new(Point3::new(0., 0., -1.), 0.5, Rc::new(blue_ball_material));
+    let center = Sphere::new(Point3::new(-1., 0., -1.), 0.5, Rc::new(refracting_material));
     let right = Sphere::new(
         Point3::new(1., 0., -1.),
         0.5,

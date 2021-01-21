@@ -13,3 +13,7 @@
 - [Rendering (computer graphics) - Wikipedia](https://en.wikipedia.org/wiki/Rendering_(computer_graphics)#Techniques)
 - [Rasterisation - Wikipedia](https://en.wikipedia.org/wiki/Rasterisation)
 - [Scanline rendering - Wikipedia](https://en.wikipedia.org/wiki/Scanline_rendering)
+
+## Sampling
+
+- [Stratified Sampling](http://www.pbr-book.org/3ed-2018/Sampling_and_Reconstruction/Stratified_Sampling.html)

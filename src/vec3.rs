@@ -62,6 +62,10 @@ impl Vec3 {
         let s = 1e-8;
         f64::abs(self.x) < s && f64::abs(self.y) < s && f64::abs(self.z) < s
     }
+
+    pub fn reflect(self, normal: Vec3) -> Self {
+        self - 2. * self.dot(normal) * normal
+    }
 }
 
 impl Display for Vec3 {

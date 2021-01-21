@@ -9,6 +9,7 @@ mod hittable;
 mod hittable_list;
 mod lambertian;
 mod material;
+mod metal;
 mod point3;
 mod ppm;
 mod ray;
@@ -19,6 +20,7 @@ use color::Color;
 use hittable::{HitRecord, Hittable};
 use hittable_list::HittableList;
 use lambertian::Lambertian;
+use metal::Metal;
 use point3::Point3;
 use ppm::write_ppm;
 use rand::random;
@@ -104,9 +106,20 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let ground_material = Lambertian::new(Color::new(0.8, 0.8, 0.));
     let ball_material = Lambertian::new(Color::new(0.7, 0.3, 0.3));
+    let metal_material = Metal::new(Color::new(0.8, 0.8, 0.8));
+    let yellow_metal_material = Metal::new(Color::new(0.8, 0.6, 0.2));
     let ground = Sphere::new(Point3::new(0., -100.5, -1.), 100., Rc::new(ground_material));
     let ball = Sphere::new(Point3::new(0., 0., -1.), 0.5, Rc::new(ball_material));
+    let metal_sphere = Sphere::new(Point3::new(-1., 0., -1.), 0.5, Rc::new(metal_material));
+    let yellow_metal_sphere = Sphere::new(
+        Point3::new(1., 0., -1.),
+        0.5,
+        Rc::new(yellow_metal_material),
+    );
+
     world.add(Box::new(ball));
+    world.add(Box::new(metal_sphere));
+    world.add(Box::new(yellow_metal_sphere));
     // world.add(Box::new(Sphere::new(
     //     Point3::new(-1., 0., -2.),
     //     0.5,

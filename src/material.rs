@@ -7,7 +7,7 @@ pub trait Material {
         &self,
         ray_in: Ray,
         record: &HitRecord,
-        color: &mut Color,
+        attenuation: &mut Color,
         scattered: &mut Ray,
     ) -> bool;
 }

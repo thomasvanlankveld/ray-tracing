@@ -1,4 +1,4 @@
-use crate::{color::Color, hittable::HitRecord, material::Material, random_unit_vector, ray::Ray};
+use crate::{color::Color, hittable::HitRecord, material::Material, point3::Vec3, ray::Ray};
 
 #[derive(Debug, Clone, Copy)]
 pub struct Lambertian {
@@ -19,7 +19,7 @@ impl Material for Lambertian {
         attenuation: &mut Color,
         scattered: &mut Ray,
     ) -> bool {
-        let mut scatter_direction = record.normal + random_unit_vector();
+        let mut scatter_direction = record.normal + Vec3::random_unit_vector();
 
         // Catch degenerate scatter direction
         if scatter_direction.is_near_zero() {

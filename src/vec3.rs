@@ -34,6 +34,19 @@ impl Vec3 {
         )
     }
 
+    pub fn random_in_unit_sphere() -> Self {
+        loop {
+            let point = Self::random_in_range(-1., 1.);
+            if point.len_squared() < 1. {
+                return point;
+            };
+        }
+    }
+
+    pub fn random_unit_vector() -> Self {
+        Self::random_in_unit_sphere().unit_vector()
+    }
+
     pub fn len(self) -> f64 {
         f64::sqrt(self.len_squared())
     }

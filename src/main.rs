@@ -55,19 +55,6 @@ fn ray_background_color(ray: Ray) -> Color {
     (1. - t) * Color::new(1., 1., 1.) + t * Color::new(0.5, 0.7, 1.)
 }
 
-fn random_in_unit_sphere() -> Point3 {
-    loop {
-        let point = Vec3::random_in_range(-1., 1.);
-        if point.len_squared() < 1. {
-            return point;
-        };
-    }
-}
-
-fn random_unit_vector() -> Point3 {
-    random_in_unit_sphere().unit_vector()
-}
-
 // Return a surface normal visualization if the ray hits the sphere, and the background color if it does not
 fn ray_color(ray: Ray, world: &dyn Hittable, depth: i64) -> Color {
     let mut record = HitRecord::new();
@@ -106,8 +93,8 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let ground_material = Lambertian::new(Color::new(0.8, 0.8, 0.));
     let ball_material = Lambertian::new(Color::new(0.7, 0.3, 0.3));
-    let metal_material = Metal::new(Color::new(0.8, 0.8, 0.8));
-    let yellow_metal_material = Metal::new(Color::new(0.8, 0.6, 0.2));
+    let metal_material = Metal::new(Color::new(0.8, 0.8, 0.8), 0.3);
+    let yellow_metal_material = Metal::new(Color::new(0.8, 0.6, 0.2), 1.);
     let ground = Sphere::new(Point3::new(0., -100.5, -1.), 100., Rc::new(ground_material));
     let ball = Sphere::new(Point3::new(0., 0., -1.), 0.5, Rc::new(ball_material));
     let metal_sphere = Sphere::new(Point3::new(-1., 0., -1.), 0.5, Rc::new(metal_material));

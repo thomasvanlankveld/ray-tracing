@@ -97,7 +97,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let blue_ball_material = Lambertian::new(Color::new(0.1, 0.2, 0.5));
     // let ball_material = Lambertian::new(Color::new(0.7, 0.3, 0.3));
     // let metal_material = Metal::new(Color::new(0.8, 0.8, 0.8), 0.3);
-    let yellow_metal_material = Metal::new(Color::new(0.8, 0.6, 0.2), 1.);
+    let yellow_metal_material = Metal::new(Color::new(0.8, 0.6, 0.2), 0.1);
     let refracting_material = Dielectric::new(1.5);
 
     let ground = Sphere::new(Point3::new(0., -100.5, -1.), 100., Rc::new(ground_material));
@@ -131,7 +131,13 @@ fn main() -> Result<(), Box<dyn Error>> {
     world.add(Box::new(ground));
 
     // Camera
-    let camera = Camera::new(90., 16. / 9.);
+    let camera = Camera::new(
+        Point3::new(-2., 2., 1.),
+        Point3::new(0., 0., -1.),
+        Vec3::new(0., 1., 0.),
+        20.,
+        16. / 9.,
+    );
 
     // Create pixel data
     let mut image = vec![vec![Color::new(0., 0., 0.); image_width.into()]; image_height.into()];

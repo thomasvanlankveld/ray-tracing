@@ -57,6 +57,11 @@ impl Vec3 {
     pub fn unit_vector(self) -> Self {
         self / self.len()
     }
+
+    pub fn is_near_zero(self) -> bool {
+        let s = 1e-8;
+        f64::abs(self.x) < s && f64::abs(self.y) < s && f64::abs(self.z) < s
+    }
 }
 
 impl Display for Vec3 {

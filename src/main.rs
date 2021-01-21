@@ -1,12 +1,14 @@
 // Sys
-use std::error::Error;
 use std::io::Write;
+use std::{error::Error, rc::Rc};
 
 // Project
 mod camera;
 mod color;
 mod hittable;
 mod hittable_list;
+mod lambertian;
+mod material;
 mod point3;
 mod ppm;
 mod ray;
@@ -16,6 +18,7 @@ use camera::Camera;
 use color::Color;
 use hittable::{HitRecord, Hittable};
 use hittable_list::HittableList;
+use lambertian::Lambertian;
 use point3::Point3;
 use ppm::write_ppm;
 use rand::random;
@@ -73,13 +76,16 @@ fn ray_color(ray: Ray, world: &dyn Hittable, depth: i64) -> Color {
 
     // We set t_min to slightly above 0, so we don't get values below 0 from floating point rounding errors (this fixes shadow acne)
     if world.hit(ray, 0.001, f64::INFINITY, &mut record) {
-        let target = record.point + record.normal + random_unit_vector();
-        return 0.5
-            * ray_color(
-                Ray::new(record.point, target - record.point),
-                world,
-                depth - 1,
-            );
+        let mut scattered = Ray::nowhere();
+        let mut attenuation = Color::new(0., 0., 0.);
+        return if record
+            .material
+            .scatter(ray, &record, &mut attenuation, &mut scattered)
+        {
+            attenuation * ray_color(scattered, world, depth - 1)
+        } else {
+            Color::new(0., 0., 0.)
+        };
     };
 
     ray_background_color(ray)
@@ -95,10 +101,23 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // World
     let mut world = HittableList::new();
-    world.add(Box::new(Sphere::new(Point3::new(0., 0., -1.), 0.5)));
-    // world.add(Box::new(Sphere::new(Point3::new(-1., 0., -2.), 0.5)));
-    // world.add(Box::new(Sphere::new(Point3::new(-2., 0., -3.), 0.5)));
-    world.add(Box::new(Sphere::new(Point3::new(0., -100.5, -1.), 100.)));
+
+    let ground_material = Lambertian::new(Color::new(0.8, 0.8, 0.));
+    let ball_material = Lambertian::new(Color::new(0.7, 0.3, 0.3));
+    let ground = Sphere::new(Point3::new(0., -100.5, -1.), 100., Rc::new(ground_material));
+    let ball = Sphere::new(Point3::new(0., 0., -1.), 0.5, Rc::new(ball_material));
+    world.add(Box::new(ball));
+    // world.add(Box::new(Sphere::new(
+    //     Point3::new(-1., 0., -2.),
+    //     0.5,
+    //     Rc::new(Lambertian::new(Color::new(0.3, 0.3, 0.7))),
+    // )));
+    // world.add(Box::new(Sphere::new(
+    //     Point3::new(-2., 0., -3.),
+    //     0.5,
+    //     Rc::new(Lambertian::new(Color::new(0.3, 0.7, 0.3))),
+    // )));
+    world.add(Box::new(ground));
 
     // Camera
     let camera = Camera::new();

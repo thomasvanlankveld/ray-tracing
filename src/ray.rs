@@ -15,6 +15,10 @@ impl Ray {
         }
     }
 
+    pub fn nowhere() -> Self {
+        Self::new(Point3::new(0., 0., 0.), Vec3::new(0., 0., 0.))
+    }
+
     #[allow(dead_code)]
     pub fn at(self, t: f64) -> Point3 {
         self.origin + t * self.direction

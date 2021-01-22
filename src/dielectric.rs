@@ -25,7 +25,7 @@ impl Material for Dielectric {
         &self,
         ray_in: Ray,
         record: &HitRecord,
-        attenuation: &mut Vec3,
+        attenuation: &mut Color,
         scattered: &mut Ray,
     ) -> bool {
         *attenuation = Color::new(1., 1., 1.);

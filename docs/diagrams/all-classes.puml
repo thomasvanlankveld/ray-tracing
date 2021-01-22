@@ -1,0 +1,212 @@
+@startuml classes
+
+class Camera << struct >> {
+    - origin: Point3
+    - lower_left_corner: Point3
+    - horizontal: Vec3
+    - vertical: Vec3
+    - w: Vec3
+    - u: Vec3
+    - v: Vec3
+    - lens_radius: f64
+    + new(look_from: Point3, look_at: Point3, vup: Vec3, vertical_field_of_view: f64, aspect_ratio: f64, aperture: f64, focus_distance: f64) -> Self
+    + get_ray(self, u: f64, v: f64) -> Ray
+}
+
+Camera --> Point3
+Camera --> Vec3
+Camera --> Ray
+
+abstract class Hittable << trait >> {
+    + hit(&self, ray: Ray, t_min: f64, t_max: f64, record: &mut HitRecord) -> bool
+}
+
+Hittable --> Ray
+Hittable --> HitRecord
+
+class Sphere << struct >> {
+    - center: Point3
+    - radius: f64
+    - material: Rc<dyn Material>
+    + new(center: Point3, radius: f64, material: Rc<dyn Material>) -> Self
+    + hit(&self, ray: Ray, t_min: f64, t_max: f64, record: &mut HitRecord) -> bool
+}
+
+Sphere --> Point3
+Sphere --> Material
+Sphere --> Ray
+Sphere --> HitRecord
+
+class HittableList << struct >> {
+    - objects: Vec<Box<dyn Hittable>>,
+    + new() -> Self
+    + clear(&mut self)
+    + add(&mut self, object: Box<dyn Hittable>)
+    + hit(&self, ray: Ray, t_min: f64, t_max: f64, record: &mut HitRecord) -> bool
+}
+
+HittableList --> Ray
+HittableList --> HitRecord
+
+Hittable <|-- Sphere : implements
+Hittable <|-- HittableList : implements
+
+class HitRecord << struct >> {
+    + point: Point3
+    + normal: Vec3
+    + material: Rc<dyn Material>
+    + t: f64
+    + is_front_face: bool
+    + new() -> Self
+    + set_face_normal(&mut self, ray: Ray, outward_normal: Vec3)
+}
+
+HitRecord --> Point3
+HitRecord --> Vec3
+HitRecord --> Material
+HitRecord --> Ray
+
+class Ray << struct >> {
+    + origin: Point3
+    + direction: Vec3
+    + new(origin: Point3, direction: Vec3) -> Self
+    + nowhere() -> Self
+    + at(self, t: f64) -> Point3
+}
+
+Ray --> Point3
+Ray --> Vec3
+
+abstract class Material << trait >> {
+    + scatter(&self, ray_in: Ray, record: &HitRecord, attenuation: &mut Color, scattered: &mut Ray) -> bool
+}
+
+Material --> Color
+Material --> HitRecord
+Material --> Ray
+
+class Dielectric << struct >> {
+    - refraction_index: f64
+    + scatter(&self, ray_in: Ray, record: &HitRecord, attenuation: &mut Color, scattered: &mut Ray) -> bool
+}
+
+Dielectric --|> Material : implements
+Dielectric --> Color
+Dielectric --> HitRecord
+Dielectric --> Ray
+Dielectric --> Vec3
+
+class Lambertian << struct >> {
+    - Color albedo
+    + bool scatter(Ray ray_in, &HitRecord record, &mut Color attenuation, &mut Ray scattered)
+}
+
+Lambertian --|> Material : implements
+Lambertian --> Color
+Lambertian --> HitRecord
+Lambertian --> Ray
+Lambertian --> Vec3
+
+class Metal << struct >> {
+    - Color albedo
+    - f64 fuzz
+    + bool scatter(Ray ray_in, &HitRecord record, &mut Color attenuation, &mut Ray scattered)
+}
+
+Metal --|> Material : implements
+Metal --> Color
+Metal --> HitRecord
+Metal --> Ray
+Metal --> Vec3
+
+abstract class Neg << trait >> {
+    + neg() -> Output
+}
+
+abstract class Add<T> << trait >> {
+    + add(other: T) -> Output
+}
+
+abstract class AddAssign<T> << trait >> {
+    + add_assign(other: T) -> void
+}
+
+abstract class Sub<T> << trait >> {
+    + sub(other: T) -> Output
+}
+
+abstract class SubAssign<T> << trait >> {
+    + sub_assign(other: T) -> void
+}
+
+abstract class Mul<T> << trait >> {
+    + mul(other: T) -> Output
+}
+
+abstract class MulAssign<T> << trait >> {
+    + mul_assign(other: T) -> void
+}
+
+abstract class Div<T> << trait >> {
+    + div(other: T) -> Output
+}
+
+abstract class DivAssign<T> << trait >> {
+    + dic_assign(other: T) -> void
+}
+
+class Vec3 << struct >> {
+    + x: f64
+    + y: f64
+    + z: f64
+    + new(x: f64, y: f64, z: f64) -> Self
+    + random() -> Self
+    + random_in_range(min: f64, max: f64) -> Self
+    + random_in_unit_sphere() -> Self
+    + random_unit_vector() -> Self
+    + random_in_unit_disk() -> Self
+    + len(self) -> f64
+    + len_squared(self) -> f64
+    + dot(self, other: Self) -> f64
+    + cross(self, other: Self) -> Self
+    + unit_vector(self) -> Self
+    + is_near_zero(self) -> bool
+    + reflect(self, normal: Vec3) -> Self
+    + refract(self, normal: Vec3, eta_in_over_eta_out: f64) -> Self
+    + neg() -> Self
+    + add(other: Self) -> Self
+    + add_assign(other: Self) -> void
+    + sub(other: Self) -> Self
+    + sub_assign(other: Self) -> void
+    + mul(other: Self) -> Self
+    + mul(other: f64) -> Self
+    + mul_assign(other: f64) -> void
+    + div(other: f64) -> Self
+    + div_assign(other: f64) -> void
+}
+
+Vec3 --|> Neg : implements
+Vec3 --|> Add : implements
+Vec3 --|> AddAssign : implements
+Vec3 --|> Sub : implements
+Vec3 --|> SubAssign : implements
+Vec3 --|> Mul : implements
+Vec3 --|> MulAssign : implements
+Vec3 --|> Div : implements
+Vec3 --|> DivAssign : implements
+
+class Color << alias >> {
+    + ...
+    + ...()
+}
+
+Color --> Vec3 : alias
+
+class Point3 << alias >> {
+    + ...
+    + ...()
+}
+
+Point3 --> Vec3 : alias
+
+@enduml

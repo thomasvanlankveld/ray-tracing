@@ -131,12 +131,21 @@ fn main() -> Result<(), Box<dyn Error>> {
     world.add(Box::new(ground));
 
     // Camera
+    let look_from = Point3::new(3., 3., 2.);
+    let look_at = Point3::new(0., 0., -1.);
+    let vup = Vec3::new(0., 1., 0.);
+    let vertical_field_of_view = 20.;
+    let focus_distance = (look_from - look_at).len();
+    let aperture = 2.;
+
     let camera = Camera::new(
-        Point3::new(-2., 2., 1.),
-        Point3::new(0., 0., -1.),
-        Vec3::new(0., 1., 0.),
-        20.,
-        16. / 9.,
+        look_from,
+        look_at,
+        vup,
+        vertical_field_of_view,
+        aspect_ratio,
+        aperture,
+        focus_distance,
     );
 
     // Create pixel data

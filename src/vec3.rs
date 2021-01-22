@@ -35,6 +35,7 @@ impl Vec3 {
     }
 
     pub fn random_in_unit_sphere() -> Self {
+        // Rejection method, keep generating a random points on inside a unit cube until we get one whose distance is less than 1, then return that one
         loop {
             let point = Self::random_in_range(-1., 1.);
             if point.len_squared() < 1. {
@@ -45,6 +46,17 @@ impl Vec3 {
 
     pub fn random_unit_vector() -> Self {
         Self::random_in_unit_sphere().unit_vector()
+    }
+
+    pub fn random_in_unit_disk() -> Self {
+        // Rejection method, keep generating a random points on a unit square until we get one whose distance is less than 1, then return that one
+        let mut rng = thread_rng();
+        loop {
+            let point = Vec3::new(rng.gen_range(-1.0..1.0), rng.gen_range(-1.0..1.0), 0.);
+            if point.len_squared() < 1. {
+                return point;
+            };
+        }
     }
 
     pub fn len(self) -> f64 {

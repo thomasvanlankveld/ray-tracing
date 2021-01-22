@@ -22,10 +22,11 @@ use dielectric::Dielectric;
 use hittable::{HitRecord, Hittable};
 use hittable_list::HittableList;
 use lambertian::Lambertian;
+use material::Material;
 use metal::Metal;
 use point3::Point3;
 use ppm::write_ppm;
-use rand::random;
+use rand::{random, thread_rng, Rng};
 use ray::Ray;
 use sphere::Sphere;
 use vec3::Vec3;
@@ -83,6 +84,7 @@ fn ray_color(ray: Ray, world: &dyn Hittable, depth: i64) -> Color {
     ray_background_color(ray)
 }
 
+#[allow(dead_code)]
 fn controlled_scene() -> HittableList {
     let mut world = HittableList::new();
 
@@ -126,24 +128,94 @@ fn controlled_scene() -> HittableList {
     world
 }
 
+#[allow(dead_code)]
+fn random_scene() -> HittableList {
+    let mut world = HittableList::new();
+
+    let ground_material = Rc::new(Lambertian::new(Color::new(0.5, 0.5, 0.5)));
+    let ground = Box::new(Sphere::new(
+        Point3::new(0., -1000., 0.),
+        1000.,
+        ground_material,
+    ));
+    world.add(ground);
+
+    for a in -11..11 {
+        for b in -11..11 {
+            let material_choice = random::<f64>();
+            let center = Point3::new(
+                f64::from(a) + 0.9 * random::<f64>(),
+                0.2,
+                f64::from(b) + 0.9 * random::<f64>(),
+            );
+
+            // Skip if the item is out of view
+            if (center - Point3::new(4., 0.2, 0.)).len() <= 0.9 {
+                continue;
+            };
+
+            let material: Rc<dyn Material> = if material_choice < 0.8 {
+                // Diffuse
+                let albedo = Color::random() * Color::random();
+                Rc::new(Lambertian::new(albedo))
+            } else if material_choice < 0.95 {
+                // Metal
+                let albedo = Color::random_in_range(0.5, 1.);
+                let mut rng = thread_rng();
+                let fuzz = rng.gen_range(0.0..0.5);
+                Rc::new(Metal::new(albedo, fuzz))
+            } else {
+                // Glass
+                Rc::new(Dielectric::new(1.5))
+            };
+
+            let object = Box::new(Sphere::new(center, 0.2, material));
+            world.add(object);
+        }
+    }
+
+    let big_glass = Box::new(Sphere::new(
+        Point3::new(0., 1., 0.),
+        1.,
+        Rc::new(Dielectric::new(1.5)),
+    ));
+    world.add(big_glass);
+
+    let big_diffuse = Box::new(Sphere::new(
+        Point3::new(-4., 1., 0.),
+        1.,
+        Rc::new(Lambertian::new(Color::new(0.4, 0.2, 0.1))),
+    ));
+    world.add(big_diffuse);
+
+    let big_metal = Box::new(Sphere::new(
+        Point3::new(4., 1., 0.),
+        1.,
+        Rc::new(Metal::new(Color::new(0.7, 0.6, 0.5), 0.)),
+    ));
+    world.add(big_metal);
+
+    world
+}
+
 fn main() -> Result<(), Box<dyn Error>> {
     // Image
-    let aspect_ratio: f64 = 16. / 9.;
+    let aspect_ratio: f64 = 3. / 2.;
     let image_width: u16 = 400;
     let image_height: u16 = (f64::from(image_width) / aspect_ratio).floor() as u16;
     let samples_per_pixel = 100;
     let max_depth = 50;
 
     // World
-    let world = controlled_scene();
+    let world = random_scene();
 
     // Camera
-    let look_from = Point3::new(3., 3., 2.);
-    let look_at = Point3::new(0., 0., -1.);
+    let look_from = Point3::new(13., 2., 3.);
+    let look_at = Point3::new(0., 0., 0.);
     let vup = Vec3::new(0., 1., 0.);
     let vertical_field_of_view = 20.;
-    let focus_distance = (look_from - look_at).len();
-    let aperture = 2.;
+    let focus_distance = 10.;
+    let aperture = 0.1;
 
     let camera = Camera::new(
         look_from,

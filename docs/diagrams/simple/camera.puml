@@ -1,0 +1,12 @@
+@startuml camera
+
+class Camera << struct >> {
+    + new() -> Self
+    + get_ray() -> Ray
+}
+
+Camera --> Point3
+Camera --> Vec3
+Camera --> Ray
+
+@enduml

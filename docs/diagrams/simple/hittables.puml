@@ -1,0 +1,42 @@
+@startuml hittables
+
+abstract class Hittable << trait >> {
+    + hit() -> bool
+}
+
+Hittable --> HitRecord
+
+class Sphere << struct >> {
+    - center: Point3
+    - radius: f64
+    + new() -> Self
+    + hit() -> bool
+}
+
+Sphere --> HitRecord
+
+class HittableList << struct >> {
+    - objects: Vec<Box<dyn Hittable>>,
+    + new() -> Self
+    + clear()
+    + add()
+    + hit() -> bool
+}
+
+HittableList "1" --> "*" Hittable
+HittableList --> HitRecord
+
+Hittable <|-- Sphere : implements
+Hittable <|-- HittableList : implements
+
+class HitRecord << struct >> {
+    + point: Point3
+    + normal: Vec3
+    + material: Rc<dyn Material>
+    + t: f64
+    + is_front_face: bool
+    + new() -> Self
+    + set_face_normal()
+}
+
+@enduml

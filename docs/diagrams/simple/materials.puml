@@ -1,0 +1,29 @@
+@startuml materials
+
+abstract class Material << trait >> {
+    + scatter() -> bool
+}
+
+class Dielectric << struct >> {
+    - refraction_index: f64
+    + scatter() -> bool
+}
+
+Dielectric --|> Material : implements
+
+class Lambertian << struct >> {
+    - Color albedo
+    + scatter() -> bool
+}
+
+Lambertian --|> Material : implements
+
+class Metal << struct >> {
+    - Color albedo
+    - f64 fuzz
+    + scatter() -> bool
+}
+
+Metal --|> Material : implements
+
+@enduml

@@ -99,7 +99,7 @@ Dielectric --> Vec3
 
 class Lambertian << struct >> {
     - Color albedo
-    + bool scatter(Ray ray_in, &HitRecord record, &mut Color attenuation, &mut Ray scattered)
+    + scatter(&self, ray_in: Ray, record: &HitRecord, attenuation: &mut Color, scattered: &mut Ray) -> bool
 }
 
 Lambertian --|> Material : implements
@@ -111,7 +111,7 @@ Lambertian --> Vec3
 class Metal << struct >> {
     - Color albedo
     - f64 fuzz
-    + bool scatter(Ray ray_in, &HitRecord record, &mut Color attenuation, &mut Ray scattered)
+    + scatter(&self, ray_in: Ray, record: &HitRecord, attenuation: &mut Color, scattered: &mut Ray) -> bool
 }
 
 Metal --|> Material : implements

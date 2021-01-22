@@ -1,0 +1,104 @@
+@startuml primitives with traits
+
+class Ray << struct >> {
+    + origin: Point3
+    + direction: Vec3
+    + new(origin: Point3, direction: Vec3) -> Self
+    + nowhere() -> Self
+    + at(self, t: f64) -> Point3
+}
+
+Ray --> Point3
+Ray --> Vec3
+
+abstract class Neg << trait >> {
+    + neg() -> Output
+}
+
+abstract class Add<T> << trait >> {
+    + add(other: T) -> Output
+}
+
+abstract class AddAssign<T> << trait >> {
+    + add_assign(other: T) -> void
+}
+
+abstract class Sub<T> << trait >> {
+    + sub(other: T) -> Output
+}
+
+abstract class SubAssign<T> << trait >> {
+    + sub_assign(other: T) -> void
+}
+
+abstract class Mul<T> << trait >> {
+    + mul(other: T) -> Output
+}
+
+abstract class MulAssign<T> << trait >> {
+    + mul_assign(other: T) -> void
+}
+
+abstract class Div<T> << trait >> {
+    + div(other: T) -> Output
+}
+
+abstract class DivAssign<T> << trait >> {
+    + dic_assign(other: T) -> void
+}
+
+class Vec3 << struct >> {
+    + x: f64
+    + y: f64
+    + z: f64
+    + new(x: f64, y: f64, z: f64) -> Self
+    + random() -> Self
+    + random_in_range(min: f64, max: f64) -> Self
+    + random_in_unit_sphere() -> Self
+    + random_unit_vector() -> Self
+    + random_in_unit_disk() -> Self
+    + len(self) -> f64
+    + len_squared(self) -> f64
+    + dot(self, other: Self) -> f64
+    + cross(self, other: Self) -> Self
+    + unit_vector(self) -> Self
+    + is_near_zero(self) -> bool
+    + reflect(self, normal: Vec3) -> Self
+    + refract(self, normal: Vec3, eta_in_over_eta_out: f64) -> Self
+    + neg() -> Self
+    + add(other: Self) -> Self
+    + add_assign(other: Self) -> void
+    + sub(other: Self) -> Self
+    + sub_assign(other: Self) -> void
+    + mul(other: Self) -> Self
+    + mul(other: f64) -> Self
+    + mul_assign(other: f64) -> void
+    + div(other: f64) -> Self
+    + div_assign(other: f64) -> void
+}
+
+Vec3 --|> Neg : implements
+Vec3 --|> Add : implements
+Vec3 --|> AddAssign : implements
+Vec3 --|> Sub : implements
+Vec3 --|> SubAssign : implements
+Vec3 --|> Mul : implements
+Vec3 --|> MulAssign : implements
+Vec3 --|> Div : implements
+Vec3 --|> DivAssign : implements
+
+class Color << alias >> {
+    + ...
+    + ...()
+}
+
+Color --> Vec3 : alias
+
+class Point3 << alias >> {
+    + ...
+    + ...()
+}
+
+Point3 --> Vec3 : alias
+
+@enduml

@@ -1,0 +1,45 @@
+@startuml materials
+
+abstract class Material << trait >> {
+    + scatter(&self, ray_in: Ray, record: &HitRecord, attenuation: &mut Color, scattered: &mut Ray) -> bool
+}
+
+Material --> Color
+Material --> HitRecord
+Material --> Ray
+
+class Dielectric << struct >> {
+    - refraction_index: f64
+    + scatter(&self, ray_in: Ray, record: &HitRecord, attenuation: &mut Color, scattered: &mut Ray) -> bool
+}
+
+Dielectric --|> Material : implements
+Dielectric --> Color
+Dielectric --> HitRecord
+Dielectric --> Ray
+Dielectric --> Vec3
+
+class Lambertian << struct >> {
+    - Color albedo
+    + bool scatter(Ray ray_in, &HitRecord record, &mut Color attenuation, &mut Ray scattered)
+}
+
+Lambertian --|> Material : implements
+Lambertian --> Color
+Lambertian --> HitRecord
+Lambertian --> Ray
+Lambertian --> Vec3
+
+class Metal << struct >> {
+    - Color albedo
+    - f64 fuzz
+    + bool scatter(Ray ray_in, &HitRecord record, &mut Color attenuation, &mut Ray scattered)
+}
+
+Metal --|> Material : implements
+Metal --> Color
+Metal --> HitRecord
+Metal --> Ray
+Metal --> Vec3
+
+@enduml

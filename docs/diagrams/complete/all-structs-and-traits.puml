@@ -1,4 +1,4 @@
-@startuml classes
+@startuml all structs and traits
 
 class Camera << struct >> {
     - origin: Point3
@@ -46,6 +46,7 @@ class HittableList << struct >> {
 }
 
 HittableList --> Ray
+HittableList "1" --> "*" Hittable : contains
 HittableList --> HitRecord
 
 Hittable <|-- Sphere : implements

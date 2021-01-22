@@ -1,0 +1,58 @@
+@startuml primitives
+
+class Ray << struct >> {
+    + origin: Point3
+    + direction: Vec3
+    + new(origin: Point3, direction: Vec3) -> Self
+    + nowhere() -> Self
+    + at(self, t: f64) -> Point3
+}
+
+Ray --> Point3
+Ray --> Vec3
+
+class Vec3 << struct >> {
+    + x: f64
+    + y: f64
+    + z: f64
+    + new(x: f64, y: f64, z: f64) -> Self
+    + random() -> Self
+    + random_in_range(min: f64, max: f64) -> Self
+    + random_in_unit_sphere() -> Self
+    + random_unit_vector() -> Self
+    + random_in_unit_disk() -> Self
+    + len(self) -> f64
+    + len_squared(self) -> f64
+    + dot(self, other: Self) -> f64
+    + cross(self, other: Self) -> Self
+    + unit_vector(self) -> Self
+    + is_near_zero(self) -> bool
+    + reflect(self, normal: Vec3) -> Self
+    + refract(self, normal: Vec3, eta_in_over_eta_out: f64) -> Self
+    + neg() -> Self
+    + add(other: Self) -> Self
+    + add_assign(other: Self) -> void
+    + sub(other: Self) -> Self
+    + sub_assign(other: Self) -> void
+    + mul(other: Self) -> Self
+    + mul(other: f64) -> Self
+    + mul_assign(other: f64) -> void
+    + div(other: f64) -> Self
+    + div_assign(other: f64) -> void
+}
+
+class Color << alias >> {
+    + ...
+    + ...()
+}
+
+Color --> Vec3 : alias
+
+class Point3 << alias >> {
+    + ...
+    + ...()
+}
+
+Point3 --> Vec3 : alias
+
+@enduml

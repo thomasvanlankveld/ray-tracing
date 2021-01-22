@@ -1,0 +1,20 @@
+@startuml camera
+
+class Camera << struct >> {
+    - origin: Point3
+    - lower_left_corner: Point3
+    - horizontal: Vec3
+    - vertical: Vec3
+    - w: Vec3
+    - u: Vec3
+    - v: Vec3
+    - lens_radius: f64
+    + new(look_from: Point3, look_at: Point3, vup: Vec3, vertical_field_of_view: f64, aspect_ratio: f64, aperture: f64, focus_distance: f64) -> Self
+    + get_ray(self, u: f64, v: f64) -> Ray
+}
+
+Camera --> Point3
+Camera --> Vec3
+Camera --> Ray
+
+@enduml

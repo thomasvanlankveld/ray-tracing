@@ -47,6 +47,7 @@ fn ray_background_color_rainbow(ray: Ray) -> Color {
     )
 }
 
+#[allow(dead_code)]
 fn ray_background_color(ray: Ray) -> Color {
     let unit_direction = Vec3::unit_vector(ray.direction);
 

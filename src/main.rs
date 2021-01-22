@@ -83,15 +83,7 @@ fn ray_color(ray: Ray, world: &dyn Hittable, depth: i64) -> Color {
     ray_background_color(ray)
 }
 
-fn main() -> Result<(), Box<dyn Error>> {
-    // Image
-    let aspect_ratio: f64 = 16. / 9.;
-    let image_width: u16 = 400;
-    let image_height: u16 = (f64::from(image_width) / aspect_ratio).floor() as u16;
-    let samples_per_pixel = 100;
-    let max_depth = 50;
-
-    // World
+fn controlled_scene() -> HittableList {
     let mut world = HittableList::new();
 
     let ground_material = Lambertian::new(Color::new(0.8, 0.8, 0.));
@@ -130,6 +122,20 @@ fn main() -> Result<(), Box<dyn Error>> {
     //     Rc::new(Lambertian::new(Color::new(0.3, 0.7, 0.3))),
     // )));
     world.add(Box::new(ground));
+
+    world
+}
+
+fn main() -> Result<(), Box<dyn Error>> {
+    // Image
+    let aspect_ratio: f64 = 16. / 9.;
+    let image_width: u16 = 400;
+    let image_height: u16 = (f64::from(image_width) / aspect_ratio).floor() as u16;
+    let samples_per_pixel = 100;
+    let max_depth = 50;
+
+    // World
+    let world = controlled_scene();
 
     // Camera
     let look_from = Point3::new(3., 3., 2.);
